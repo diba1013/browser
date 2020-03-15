@@ -2,7 +2,7 @@ package de.diba.browser.api;
 
 import org.openqa.selenium.WebDriver;
 
-import de.diba.browser.internal.converter.BasicBrowserConverter;
+import de.diba.browser.internal.converter.AdvancedBrowserConverter;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import lombok.experimental.UtilityClass;
@@ -12,7 +12,7 @@ import lombok.experimental.UtilityClass;
 public class Browsers {
 
 	@Getter( lazy = true )
-	private static final BrowserConverter defaultConverter = new BasicBrowserConverter();
+	private static final BrowserConverter defaultConverter = new AdvancedBrowserConverter();
 
 	public static WebDriver create( final BrowserContext context ) {
 		return create( context, defaultConverter() );

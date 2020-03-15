@@ -20,6 +20,8 @@ class BrowserContextTest {
 				.build();
 
 		assertThat( cut.getBrowser() ).isEqualTo( BrowserType.CHROME );
+		assertThat( cut.getResolution().getWidth() ).isEqualTo( 1280 );
+		assertThat( cut.getResolution().getHeight() ).isEqualTo( 800 );
 		assertThat( cut.isHeadless() ).isFalse();
 	}
 }
