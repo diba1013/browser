@@ -30,7 +30,8 @@ public final class BrowserTestInvocationContext implements TestTemplateInvocatio
 	public List<Extension> getAdditionalExtensions() {
 		return List.of( //
 				new CreateBrowser( argument ), //
-				new BrowserTestParameterResolver() //
+				new BrowserTestParameterResolver(), //
+				new InjectBrowserIntoFields() //
 		);
 	}
 
@@ -56,6 +57,20 @@ public final class BrowserTestInvocationContext implements TestTemplateInvocatio
 		public WebDriver resolveParameter( final ParameterContext parameterContext,
 				final ExtensionContext extensionContext ) throws ParameterResolutionException {
 			return BrowserStore.get( extensionContext ).orElseThrow();
+		}
+	}
+
+	private static class InjectBrowserIntoFields implements BeforeEachCallback, AfterEachCallback {
+
+		@Override
+		public void beforeEach( final ExtensionContext context ) {
+			final WebDriver driver = BrowserStore.getRequired( context );
+			FieldStore.injectDriver( context, driver );
+		}
+
+		@Override
+		public void afterEach( final ExtensionContext context ) {
+			FieldStore.injectDriver( context, null );
 		}
 	}
 }
