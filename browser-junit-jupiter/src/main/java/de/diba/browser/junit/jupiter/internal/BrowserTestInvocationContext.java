@@ -11,6 +11,7 @@ import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.api.extension.support.TypeBasedParameterResolver;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.PageFactory;
 
 import de.diba.browser.junit.jupiter.api.provider.BrowserArgument;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +32,8 @@ public final class BrowserTestInvocationContext implements TestTemplateInvocatio
 		return List.of( //
 				new CreateBrowser( argument ), //
 				new BrowserTestParameterResolver(), //
-				new InjectBrowserIntoFields() //
+				new InjectBrowserIntoFields(), //
+				new InjectElementIntoFields() //
 		);
 	}
 
@@ -71,6 +73,15 @@ public final class BrowserTestInvocationContext implements TestTemplateInvocatio
 		@Override
 		public void afterEach( final ExtensionContext context ) {
 			FieldStore.injectDriver( context, null );
+		}
+	}
+
+	private static class InjectElementIntoFields implements BeforeEachCallback {
+
+		@Override
+		public void beforeEach( final ExtensionContext context ) throws Exception {
+			final WebDriver driver = BrowserStore.getRequired( context );
+			PageFactory.initElements( driver, context.getRequiredTestInstance() );
 		}
 	}
 }
