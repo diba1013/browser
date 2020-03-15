@@ -23,5 +23,6 @@ class BrowserContextTest {
 		assertThat( cut.getResolution().getWidth() ).isEqualTo( 1280 );
 		assertThat( cut.getResolution().getHeight() ).isEqualTo( 800 );
 		assertThat( cut.isHeadless() ).isFalse();
+		assertThat( cut.getUrl() ).isNull();
 	}
 }

@@ -16,4 +16,6 @@ public class BrowserContext {
 	private final Resolution resolution = Resolution.of( 1280, 800 );
 	@Builder.Default
 	private final boolean headless = false;
+
+	private final String url;
 }

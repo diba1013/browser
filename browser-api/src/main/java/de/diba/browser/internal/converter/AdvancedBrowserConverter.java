@@ -27,10 +27,18 @@ public final class AdvancedBrowserConverter implements BrowserConverter {
 		final Options options = driver.manage();
 		setupWindow( options.window(), context.getResolution() );
 
+		navigateToURL( driver.navigate(), context.getUrl() );
+
 		return driver;
 	}
 
 	private void setupWindow( final Window window, final Resolution resolution ) {
 		window.setSize( new Dimension( resolution.getWidth(), resolution.getHeight() ) );
+	}
+
+	private void navigateToURL( final Navigation navigation, final String url ) {
+		if ( url != null ) {
+			navigation.to( url );
+		}
 	}
 }
