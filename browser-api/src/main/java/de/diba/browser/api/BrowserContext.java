@@ -2,7 +2,7 @@ package de.diba.browser.api;
 
 import java.util.List;
 
-import de.diba.selenium.browser.api.cookie.CookieContext;
+import de.diba.browser.api.cookie.CookieContext;
 import de.diba.browser.api.resolution.Resolution;
 import lombok.Builder;
 import lombok.NonNull;

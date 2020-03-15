@@ -11,8 +11,8 @@ import org.openqa.selenium.WebDriver.Window;
 
 import de.diba.browser.api.BrowserContext;
 import de.diba.browser.api.BrowserConverter;
+import de.diba.browser.api.cookie.CookieContext;
 import de.diba.browser.api.resolution.Resolution;
-import de.diba.selenium.browser.api.cookie.CookieContext;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 
