@@ -14,11 +14,11 @@ public class Browsers {
 	@Getter( lazy = true )
 	private static final BrowserConverter defaultConverter = new AdvancedBrowserConverter();
 
-	public static WebDriver create( final BrowserContext context ) {
+	public static WebDriver create( final BrowserContext context ) throws Exception {
 		return create( context, defaultConverter() );
 	}
 
-	public static WebDriver create( final BrowserContext context, final BrowserConverter converter ) {
+	public static WebDriver create( final BrowserContext context, final BrowserConverter converter ) throws Exception {
 		return converter.convert( context );
 	}
 }

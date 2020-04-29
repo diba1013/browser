@@ -41,7 +41,7 @@ public final class BrowserTestInvocationContext implements TestTemplateInvocatio
 
 		@Override
 		public void beforeEach( final ExtensionContext context ) throws Exception {
-			BrowserStore.put( context, argument::createDriver );
+			BrowserStore.put( context, argument.createDriver() );
 		}
 
 		@Override

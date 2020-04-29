@@ -9,7 +9,7 @@ import de.diba.browser.api.Browsers;
 public class DefaultBrowserConverter implements BrowserConverter {
 
 	@Override
-	public WebDriver convert( final BrowserContext context ) {
+	public WebDriver convert( final BrowserContext context ) throws Exception {
 		return Browsers.create( context );
 	}
 }

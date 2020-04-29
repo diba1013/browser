@@ -26,7 +26,7 @@ public final class AdvancedBrowserConverter implements BrowserConverter {
 	}
 
 	@Override
-	public WebDriver convert( final BrowserContext context ) {
+	public WebDriver convert( final BrowserContext context ) throws Exception {
 		final WebDriver driver = basic.convert( context );
 
 		final Options options = driver.manage();

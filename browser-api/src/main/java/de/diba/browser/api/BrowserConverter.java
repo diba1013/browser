@@ -4,5 +4,5 @@ import org.openqa.selenium.WebDriver;
 
 public interface BrowserConverter {
 
-	WebDriver convert( final BrowserContext context );
+	WebDriver convert( final BrowserContext context ) throws Exception;
 }

@@ -49,7 +49,7 @@ class BrowserArgumentTest {
 	}
 
 	@Test
-	void createDriver_should_invoke_method_on_converter_if_present() {
+	void createDriver_should_invoke_method_on_converter_if_present() throws Exception {
 		final WebDriver driver = mock( WebDriver.class );
 
 		final BrowserConverter converter = mock( BrowserConverter.class );

@@ -1,7 +1,6 @@
 package de.diba.browser.junit.jupiter.internal;
 
 import java.util.Optional;
-import java.util.function.Supplier;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
@@ -15,11 +14,10 @@ public final class BrowserStore {
 
 	private static final String KEY = "browser.container.driver";
 
-	public static void put( final ExtensionContext context, final Supplier<? extends WebDriver> driver ) {
+	public static void put( final ExtensionContext context, final WebDriver driver ) {
 		final Store store = getStore( context );
-		final WebDriver wrapped = driver.get();
-		log.debug( "Created driver {}.", wrapped );
-		store.put( KEY, wrapped );
+		log.debug( "Storing driver '{}'.", driver );
+		store.put( KEY, driver );
 	}
 
 	public static Optional<WebDriver> get( final ExtensionContext context ) {
@@ -39,6 +37,7 @@ public final class BrowserStore {
 		final Store store = getStore( context );
 		final WebDriver driver = store.remove( KEY, WebDriver.class );
 		if ( driver != null ) {
+			log.debug( "Quitting driver '{}'.", driver );
 			driver.quit();
 		}
 	}

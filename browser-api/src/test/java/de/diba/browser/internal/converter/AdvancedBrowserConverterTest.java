@@ -32,7 +32,7 @@ class AdvancedBrowserConverterTest {
 	BrowserConverter cut;
 
 	@BeforeEach
-	void setUp() {
+	void setUp() throws Exception {
 		navigation = mock( WebDriver.Navigation.class );
 
 		window = mock( WebDriver.Window.class );
@@ -51,7 +51,7 @@ class AdvancedBrowserConverterTest {
 	}
 
 	@Test
-	void convert_should_properly_setup_window() {
+	void convert_should_properly_setup_window() throws Exception {
 		final BrowserContext context = BrowserContext.builder() //
 				.browser( BrowserType.CHROME ) //
 				.resolution( Resolution.of( 500, 500 ) ) //
@@ -63,7 +63,7 @@ class AdvancedBrowserConverterTest {
 	}
 
 	@Test
-	void convert_with_empty_cookie_context_should_not_navigate() {
+	void convert_with_empty_cookie_context_should_not_navigate() throws Exception {
 		final CookieContext emptyContext = CookieContext.builder() //
 				.url( "https://example.com" ) //
 				.build();
@@ -79,7 +79,7 @@ class AdvancedBrowserConverterTest {
 	}
 
 	@Test
-	void convert_should_navigate_and_set_cookies() {
+	void convert_should_navigate_and_set_cookies() throws Exception {
 		final Cookie cookie = mock( Cookie.class );
 
 		final CookieContext cookieContext = CookieContext.builder() //
@@ -99,7 +99,7 @@ class AdvancedBrowserConverterTest {
 	}
 
 	@Test
-	void convert_should_set_cookies_before_navigate_to_final_url() {
+	void convert_should_set_cookies_before_navigate_to_final_url() throws Exception {
 		final Cookie cookie = mock( Cookie.class );
 
 		final CookieContext cookieContext = CookieContext.builder() //
@@ -137,7 +137,7 @@ class AdvancedBrowserConverterTest {
 	}
 
 	@Test
-	void convert_with_no_url_should_not_attempt_to_navigate() {
+	void convert_with_no_url_should_not_attempt_to_navigate() throws Exception {
 		final BrowserContext context = BrowserContext.builder() //
 				.browser( BrowserType.CHROME ) //
 				.build();

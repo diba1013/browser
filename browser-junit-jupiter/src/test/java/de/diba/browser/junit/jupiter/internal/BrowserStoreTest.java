@@ -40,7 +40,7 @@ class BrowserStoreTest {
 
 		final WebDriver driver = mock( WebDriver.class );
 
-		BrowserStore.put( context, () -> driver );
+		BrowserStore.put( context, driver );
 
 		verify( context ).getStore( namespace );
 		verify( store ).put( any(), eq( driver ) );

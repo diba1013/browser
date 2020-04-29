@@ -31,7 +31,7 @@ public class BrowserArgument {
 		return Optional.ofNullable( converter );
 	}
 
-	public WebDriver createDriver() {
+	public WebDriver createDriver() throws Exception {
 		if ( converter == null ) {
 			throw new IllegalStateException( "Converter must not be null. Cannot create driver for " + context + "." );
 		}
