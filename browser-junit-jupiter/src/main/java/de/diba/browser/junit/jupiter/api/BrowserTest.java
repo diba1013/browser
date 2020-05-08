@@ -8,10 +8,10 @@ import java.lang.annotation.Target;
 import org.junit.jupiter.api.TestTemplate;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import de.diba.browser.api.BrowserConverter;
+import de.diba.browser.junit.jupiter.api.provider.BrowserConverterFactory;
 import de.diba.browser.junit.jupiter.api.provider.CookieProvider;
 import de.diba.browser.junit.jupiter.api.provider.URLProvider;
-import de.diba.browser.junit.jupiter.internal.provider.DefaultBrowserConverter;
+import de.diba.browser.junit.jupiter.internal.provider.DefaultBrowserConverterFactory;
 import de.diba.browser.junit.jupiter.internal.provider.NoCookieProvider;
 import de.diba.browser.junit.jupiter.internal.provider.NoURLProvider;
 
@@ -31,7 +31,7 @@ public @interface BrowserTest {
 
 	String name() default DEFAULT_DISPLAY_NAME;
 
-	Class<? extends BrowserConverter> converter() default DefaultBrowserConverter.class;
+	Class<? extends BrowserConverterFactory> factory() default DefaultBrowserConverterFactory.class;
 
 	Class<? extends URLProvider> url() default NoURLProvider.class;
 

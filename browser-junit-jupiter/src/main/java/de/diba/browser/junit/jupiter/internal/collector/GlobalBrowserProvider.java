@@ -11,9 +11,11 @@ import org.junit.platform.commons.support.ReflectionSupport;
 
 import de.diba.browser.api.BrowserContext;
 import de.diba.browser.api.BrowserConverter;
+import de.diba.browser.api.Browsers;
 import de.diba.browser.api.cookie.CookieContext;
 import de.diba.browser.junit.jupiter.api.BrowserTest;
 import de.diba.browser.junit.jupiter.api.provider.BrowserArgument;
+import de.diba.browser.junit.jupiter.api.provider.BrowserConverterFactory;
 import de.diba.browser.junit.jupiter.api.provider.BrowserProvider;
 import de.diba.browser.junit.jupiter.api.provider.CookieProvider;
 import de.diba.browser.junit.jupiter.api.provider.URLProvider;
@@ -31,7 +33,7 @@ public class GlobalBrowserProvider implements BrowserProvider {
 	private final BrowserProvider local;
 
 	@NonNull
-	private final BrowserConverter converter;
+	private final BrowserConverterFactory factory;
 	@Singular( "cookie" )
 	private final Set<CookieContext> cookies;
 	@Singular( "url" )
@@ -40,14 +42,14 @@ public class GlobalBrowserProvider implements BrowserProvider {
 	public static BrowserProvider of( final BrowserProvider local, final BrowserTest browser ) {
 		return GlobalBrowserProvider.builder() //
 				.local( local ) //
-				.converter( createConverter( browser.converter() ) ) //
+				.factory( createFactory( browser.factory() ) ) //
 				.cookies( createCookies( browser.cookies() ) ) //
 				.urls( createUrl( browser.url() ) ) //
 				.build();
 	}
 
-	private static BrowserConverter createConverter( final Class<? extends BrowserConverter> converter ) {
-		return ReflectionSupport.newInstance( converter );
+	private static BrowserConverterFactory createFactory( final Class<? extends BrowserConverterFactory> factory ) {
+		return ReflectionSupport.newInstance( factory );
 	}
 
 	private static Set<CookieContext> createCookies( final Class<? extends CookieProvider> cookies ) {
@@ -64,11 +66,12 @@ public class GlobalBrowserProvider implements BrowserProvider {
 
 	@Override
 	public Stream<BrowserArgument> provide( final ExtensionContext context ) {
+		final BrowserConverter global = factory.create( Browsers.Services.Suppliers.none() );
 		return local.provide( context ) //
 				.flatMap( argument -> {
-					final BrowserConverter converter = argument.getConverter().orElse( this.converter );
+					final BrowserConverter local = argument.getConverter().orElse( global );
 					return reconfigure( argument ) //
-							.map( reconfigured -> BrowserArgument.of( reconfigured, converter ) );
+							.map( reconfigured -> BrowserArgument.of( reconfigured, local ) );
 				} );
 	}
 

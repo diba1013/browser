@@ -1,5 +1,6 @@
 package de.diba.browser.junit.jupiter;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -20,6 +21,7 @@ public class MockedExtensionContext {
 		when( context.getRequiredTestClass() ).thenCallRealMethod();
 		when( context.getTestMethod() ).thenReturn( info.getTestMethod() );
 		when( context.getRequiredTestMethod() ).thenCallRealMethod();
+		when( context.getStore( any() ) ).thenReturn( mock( ExtensionContext.Store.class ) );
 		return context;
 	}
 
@@ -29,6 +31,7 @@ public class MockedExtensionContext {
 		when( context.getRequiredTestClass() ).thenCallRealMethod();
 		when( context.getTestMethod() ).thenReturn( ReflectionSupport.findMethod( provider, "method" ) );
 		when( context.getRequiredTestMethod() ).thenCallRealMethod();
+		when( context.getStore( any() ) ).thenReturn( mock( ExtensionContext.Store.class ) );
 		return context;
 	}
 
@@ -36,6 +39,7 @@ public class MockedExtensionContext {
 		final ExtensionContext context = of( provider.getClass() );
 		when( context.getTestInstance() ).thenReturn( Optional.of( provider ) );
 		when( context.getRequiredTestInstance() ).thenCallRealMethod();
+		when( context.getStore( any() ) ).thenReturn( mock( ExtensionContext.Store.class ) );
 		return context;
 	}
 

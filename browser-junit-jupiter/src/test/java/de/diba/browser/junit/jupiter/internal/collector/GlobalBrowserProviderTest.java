@@ -9,23 +9,28 @@ import java.util.stream.Stream;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtensionContext;
 import org.openqa.selenium.Cookie;
 
 import de.diba.browser.api.BrowserContext;
 import de.diba.browser.api.BrowserConverter;
 import de.diba.browser.api.BrowserType;
 import de.diba.browser.api.cookie.CookieContext;
+import de.diba.browser.junit.jupiter.MockedExtensionContext;
+import de.diba.browser.junit.jupiter.MockedExtensionContext.ExtensionContextProvider;
 import de.diba.browser.junit.jupiter.api.provider.BrowserArgument;
+import de.diba.browser.junit.jupiter.api.provider.BrowserConverterFactory;
 import de.diba.browser.junit.jupiter.api.provider.BrowserProvider;
 
 class GlobalBrowserProviderTest {
 
-	private BrowserConverter converter;
+	BrowserConverter converter;
+	BrowserConverterFactory factory;
 
 	@BeforeEach
 	void setUp() {
 		converter = mock( BrowserConverter.class );
+		factory = mock( BrowserConverterFactory.class );
+		when( factory.create( any() ) ).thenReturn( converter );
 	}
 
 	@Test
@@ -37,10 +42,10 @@ class GlobalBrowserProviderTest {
 
 		final BrowserProvider cut = GlobalBrowserProvider.builder() //
 				.local( provider ) //
-				.converter( mock( BrowserConverter.class ) ) //
+				.factory( mock( BrowserConverterFactory.class ) ) //
 				.build();
 
-		assertThat( cut.provide( mock( ExtensionContext.class ) ) ) //
+		assertThat( cut.provide( MockedExtensionContext.of( NoExtensionContextProvider.class ) ) ) //
 				.hasSize( 1 ) //
 				.allSatisfy( argument -> {
 					assertThat( argument.getConverter() ).hasValue( converter );
@@ -56,10 +61,10 @@ class GlobalBrowserProviderTest {
 
 		final BrowserProvider cut = GlobalBrowserProvider.builder() //
 				.local( provider ) //
-				.converter( converter ) //
+				.factory( factory ) //
 				.build();
 
-		assertThat( cut.provide( mock( ExtensionContext.class ) ) ) //
+		assertThat( cut.provide( MockedExtensionContext.of( NoExtensionContextProvider.class ) ) ) //
 				.hasSize( 1 ) //
 				.allSatisfy( argument -> {
 					assertThat( argument.getConverter() ).hasValue( converter );
@@ -86,11 +91,11 @@ class GlobalBrowserProviderTest {
 
 		final BrowserProvider cut = GlobalBrowserProvider.builder() //
 				.local( provider ) //
-				.converter( converter ) //
+				.factory( factory ) //
 				.cookie( globalCookie ) //
 				.build();
 
-		assertThat( cut.provide( mock( ExtensionContext.class ) ) ) //
+		assertThat( cut.provide( MockedExtensionContext.of( NoExtensionContextProvider.class ) ) ) //
 				.hasSize( 1 ) //
 				.extracting( BrowserArgument::getContext ) //
 				.flatExtracting( BrowserContext::getCookies ) //
@@ -117,11 +122,11 @@ class GlobalBrowserProviderTest {
 
 		final BrowserProvider cut = GlobalBrowserProvider.builder() //
 				.local( provider ) //
-				.converter( converter ) //
+				.factory( factory ) //
 				.cookie( globalCookie ) //
 				.build();
 
-		assertThat( cut.provide( mock( ExtensionContext.class ) ) ) //
+		assertThat( cut.provide( MockedExtensionContext.of( NoExtensionContextProvider.class ) ) ) //
 				.hasSize( 1 ) //
 				.extracting( BrowserArgument::getContext ) //
 				.allSatisfy( context -> {
@@ -141,10 +146,10 @@ class GlobalBrowserProviderTest {
 
 		final BrowserProvider cut = GlobalBrowserProvider.builder() //
 				.local( provider ) //
-				.converter( converter ) //
+				.factory( factory ) //
 				.build();
 
-		assertThat( cut.provide( mock( ExtensionContext.class ) ) ) //
+		assertThat( cut.provide( MockedExtensionContext.of( NoExtensionContextProvider.class ) ) ) //
 				.hasSize( 1 ) //
 				.extracting( BrowserArgument::getContext ) //
 				.extracting( BrowserContext::getUrl ) //
@@ -161,10 +166,10 @@ class GlobalBrowserProviderTest {
 
 		final BrowserProvider cut = GlobalBrowserProvider.builder() //
 				.local( provider ) //
-				.converter( converter ) //
+				.factory( factory ) //
 				.build();
 
-		assertThat( cut.provide( mock( ExtensionContext.class ) ) ) //
+		assertThat( cut.provide( MockedExtensionContext.of( NoExtensionContextProvider.class ) ) ) //
 				.hasSize( 1 ) //
 				.extracting( BrowserArgument::getContext ) //
 				.extracting( BrowserContext::getUrl ) //
@@ -180,11 +185,11 @@ class GlobalBrowserProviderTest {
 
 		final BrowserProvider cut = GlobalBrowserProvider.builder() //
 				.local( provider ) //
-				.converter( converter ) //
+				.factory( factory ) //
 				.url( "https://google.com" ) //
 				.build();
 
-		assertThat( cut.provide( mock( ExtensionContext.class ) ) ) //
+		assertThat( cut.provide( MockedExtensionContext.of( NoExtensionContextProvider.class ) ) ) //
 				.hasSize( 1 ) //
 				.extracting( BrowserArgument::getContext ) //
 				.extracting( BrowserContext::getUrl ) //
@@ -201,15 +206,21 @@ class GlobalBrowserProviderTest {
 
 		final BrowserProvider cut = GlobalBrowserProvider.builder() //
 				.local( provider ) //
-				.converter( converter ) //
+				.factory( factory ) //
 				.url( "https://google.de" ) //
 				.url( "https://google.com" ) //
 				.build();
 
-		assertThat( cut.provide( mock( ExtensionContext.class ) ) ) //
+		assertThat( cut.provide( MockedExtensionContext.of( NoExtensionContextProvider.class ) ) ) //
 				.hasSize( 2 ) //
 				.extracting( BrowserArgument::getContext ) //
 				.extracting( BrowserContext::getUrl ) //
 				.containsExactlyInAnyOrder( "https://google.com", "https://google.de" );
+	}
+
+	static class NoExtensionContextProvider implements ExtensionContextProvider {
+
+		@Override
+		public void method() {}
 	}
 }
