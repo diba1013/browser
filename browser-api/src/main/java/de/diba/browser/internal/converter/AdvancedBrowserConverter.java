@@ -11,6 +11,7 @@ import org.openqa.selenium.WebDriver.Window;
 
 import de.diba.browser.api.BrowserContext;
 import de.diba.browser.api.BrowserConverter;
+import de.diba.browser.api.BrowserServiceSupplier;
 import de.diba.browser.api.cookie.CookieContext;
 import de.diba.browser.api.resolution.Resolution;
 import lombok.AccessLevel;
@@ -21,8 +22,8 @@ public final class AdvancedBrowserConverter implements BrowserConverter {
 
 	private final BrowserConverter basic;
 
-	public AdvancedBrowserConverter() {
-		this( new BasicBrowserConverter() );
+	public AdvancedBrowserConverter( final BrowserServiceSupplier service ) {
+		this( new BasicBrowserConverter( service ) );
 	}
 
 	@Override

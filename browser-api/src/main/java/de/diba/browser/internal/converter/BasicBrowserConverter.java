@@ -1,69 +1,57 @@
 package de.diba.browser.internal.converter;
 
+import java.util.Map;
+
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.edge.EdgeDriver;
-import org.openqa.selenium.edge.EdgeOptions;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.FirefoxOptions;
-import org.openqa.selenium.ie.InternetExplorerDriver;
-import org.openqa.selenium.ie.InternetExplorerOptions;
-import org.openqa.selenium.opera.OperaDriver;
-import org.openqa.selenium.opera.OperaOptions;
-import org.openqa.selenium.safari.SafariDriver;
-import org.openqa.selenium.safari.SafariOptions;
+import org.openqa.selenium.remote.service.DriverService;
 
 import de.diba.browser.api.BrowserContext;
 import de.diba.browser.api.BrowserConverter;
+import de.diba.browser.api.BrowserServiceSupplier;
+import de.diba.browser.api.BrowserType;
+import de.diba.browser.internal.converter.factory.BrowserFactory;
+import de.diba.browser.internal.converter.factory.ChromeBrowserFactory;
+import de.diba.browser.internal.converter.factory.EdgeBrowserFactory;
+import de.diba.browser.internal.converter.factory.FirefoxBrowserFactory;
+import de.diba.browser.internal.converter.factory.InternetExplorerBrowserFactory;
+import de.diba.browser.internal.converter.factory.OperaBrowserFactory;
+import de.diba.browser.internal.converter.factory.SafariBrowserFactory;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor( access = AccessLevel.PACKAGE )
 public final class BasicBrowserConverter implements BrowserConverter {
 
+	private static final Map<BrowserType, BrowserFactory<?>> DEFAULT_FACTORIES = Map.of( //
+			BrowserType.CHROME, new ChromeBrowserFactory(), //
+			BrowserType.EDGE, new EdgeBrowserFactory(), //
+			BrowserType.FIREFOX, new FirefoxBrowserFactory(), //
+			BrowserType.INTERNET_EXPLORER, new InternetExplorerBrowserFactory(), //
+			BrowserType.OPERA, new OperaBrowserFactory(), //
+			BrowserType.SAFARI, new SafariBrowserFactory() //
+	);
+
+	private final Map<BrowserType, BrowserFactory<?>> factories;
+	private final BrowserServiceSupplier service;
+
+	public BasicBrowserConverter( final BrowserServiceSupplier service ) {
+		this( DEFAULT_FACTORIES, service );
+	}
+
 	@Override
-	public WebDriver convert( final BrowserContext context ) {
-		switch ( context.getBrowser() ) {
-			case CHROME:
-				return new ChromeDriver( toChromeOptions( context ) );
-			case FIREFOX:
-				return new FirefoxDriver( toFirefoxOptions( context ) );
-			case EDGE:
-				return new EdgeDriver( toEdgeOptions( context ) );
-			case SAFARI:
-				return new SafariDriver( toSafariOptions( context ) );
-			case OPERA:
-				return new OperaDriver( toOperaOptions( context ) );
-			case INTERNET_EXPLORER:
-				return new InternetExplorerDriver( toIEOptions( context ) );
+	public WebDriver convert( final BrowserContext context ) throws Exception {
+		final BrowserFactory<?> factory = factories.get( context.getBrowser() );
+		if ( factory != null ) {
+			return create( factory, context );
 		}
 		throw new UnsupportedOperationException(
 				"Convert to type of '" + context.getBrowser() + "' is not supported." );
 	}
 
-	private static ChromeOptions toChromeOptions( final BrowserContext context ) {
-		final ChromeOptions options = new ChromeOptions();
-		options.setHeadless( context.isHeadless() );
-		return options;
-	}
-
-	private static FirefoxOptions toFirefoxOptions( final BrowserContext context ) {
-		final FirefoxOptions options = new FirefoxOptions();
-		options.setHeadless( context.isHeadless() );
-		return options;
-	}
-
-	private static EdgeOptions toEdgeOptions( final BrowserContext context ) {
-		return new EdgeOptions();
-	}
-
-	private static SafariOptions toSafariOptions( final BrowserContext context ) {
-		return new SafariOptions();
-	}
-
-	private static OperaOptions toOperaOptions( final BrowserContext context ) {
-		return new OperaOptions();
-	}
-
-	private static InternetExplorerOptions toIEOptions( final BrowserContext context ) {
-		return new InternetExplorerOptions();
+	private <T extends DriverService> WebDriver create( final BrowserFactory<T> factory, final BrowserContext context )
+			throws Exception {
+		return service.get( context.getBrowser(), factory.getService() ) //
+				.map( service -> factory.create( context, service ) ) //
+				.orElseGet( () -> factory.create( context ) );
 	}
 }
