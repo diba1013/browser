@@ -11,7 +11,6 @@ import org.junit.platform.commons.support.ReflectionSupport;
 
 import de.diba.browser.api.BrowserContext;
 import de.diba.browser.api.BrowserConverter;
-import de.diba.browser.api.Browsers;
 import de.diba.browser.api.cookie.CookieContext;
 import de.diba.browser.junit.jupiter.api.BrowserTest;
 import de.diba.browser.junit.jupiter.api.provider.BrowserArgument;
@@ -19,6 +18,7 @@ import de.diba.browser.junit.jupiter.api.provider.BrowserConverterFactory;
 import de.diba.browser.junit.jupiter.api.provider.BrowserProvider;
 import de.diba.browser.junit.jupiter.api.provider.CookieProvider;
 import de.diba.browser.junit.jupiter.api.provider.URLProvider;
+import de.diba.browser.junit.jupiter.internal.service.BrowserServiceSupplierStore;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.NonNull;
@@ -66,7 +66,7 @@ public class GlobalBrowserProvider implements BrowserProvider {
 
 	@Override
 	public Stream<BrowserArgument> provide( final ExtensionContext context ) {
-		final BrowserConverter global = factory.create( Browsers.Services.Suppliers.none() );
+		final BrowserConverter global = factory.create( BrowserServiceSupplierStore.get( context ) );
 		return local.provide( context ) //
 				.flatMap( argument -> {
 					final BrowserConverter local = argument.getConverter().orElse( global );
