@@ -14,7 +14,8 @@
 
 		<java.version>11</java.version>
 
-		<junit.jupiter.version>5.6.0</junit.jupiter.version>
+		<logback.version>1.2.3</logback.version>
+		<junit.jupiter.version>5.6.2</junit.jupiter.version>
 		<maven.surefire.version>2.22.2</maven.surefire.version>
 	</properties>
 
@@ -70,8 +71,15 @@
 
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-core</artifactId>
+			<version>${logback.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
-			<version>1.2.3</version>
+			<version>${logback.version}</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -80,7 +88,7 @@
 		<dependency>
 			<groupId>net.bytebuddy</groupId>
 			<artifactId>byte-buddy</artifactId>
-			<version>1.10.8</version>
+			<version>1.10.10</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -108,7 +116,7 @@
 		<dependency>
 			<groupId>org.assertj</groupId>
 			<artifactId>assertj-core</artifactId>
-			<version>3.15.0</version>
+			<version>3.16.0</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
