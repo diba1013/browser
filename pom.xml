@@ -21,6 +21,7 @@
 
 	<modules>
 		<module>browser-api</module>
+		<module>browser-cli</module>
 		<module>browser-junit-jupiter</module>
 	</modules>
 
@@ -35,6 +36,12 @@
 			</dependency>
 
 			<!-- Other dependencies -->
+
+			<dependency>
+				<groupId>info.picocli</groupId>
+				<artifactId>picocli</artifactId>
+				<version>4.3.2</version>
+			</dependency>
 
 			<dependency>
 				<groupId>org.seleniumhq.selenium</groupId>
