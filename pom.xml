@@ -23,6 +23,7 @@
 		<module>browser-api</module>
 		<module>browser-cli</module>
 		<module>browser-junit-jupiter</module>
+		<module>browser-cli-api</module>
 	</modules>
 
 	<dependencyManagement>
@@ -32,6 +33,12 @@
 			<dependency>
 				<groupId>de.diba.browser</groupId>
 				<artifactId>browser-api</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>de.diba.browser</groupId>
+				<artifactId>browser-cli-api</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 

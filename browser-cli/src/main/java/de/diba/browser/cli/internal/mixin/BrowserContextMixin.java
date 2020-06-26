@@ -9,8 +9,8 @@ import picocli.CommandLine.Option;
 @Data
 public class BrowserContextMixin {
 
-	@Option( names = { "--browser", "-b" }, required = true )
-	private BrowserType type;
+	@Option( names = { "--browser", "-b" }, defaultValue = "chrome" )
+	private BrowserType browser;
 
 	@Option( names = { "--resolution", "-r" }, defaultValue = "1280x800" )
 	private Resolution resolution;
@@ -23,7 +23,7 @@ public class BrowserContextMixin {
 
 	public BrowserContext convert() {
 		return BrowserContext.builder() //
-				.browser( type ) //
+				.browser( browser ) //
 				.resolution( resolution ) //
 				.headless( headless ) //
 				.url( url ) //

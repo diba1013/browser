@@ -13,6 +13,7 @@ public class BrowserScriptTypeConverter implements CommandLine.ITypeConverter<Br
 	@Override
 	public BrowserScript convert( final String value ) throws Exception {
 		return loader.find( value ) //
-				.orElseThrow( () -> new IllegalArgumentException( "Script '%s' could not be found." ) );
+				.orElseThrow( () -> new IllegalArgumentException(
+						String.format( "Script '%s' could not be found.", value ) ) );
 	}
 }
